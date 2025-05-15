@@ -15,14 +15,14 @@ void Delay(int Time)
     std::this_thread::sleep_for(Delay);
 }
 void PressKey(DWORD Key) {
-    keybd_event(Key, 0, 0, 0); // Press the Tab key
-    Delay(17); // Add a small delay (adjust if needed) to simulate typing
-    keybd_event(Key, 0, KEYEVENTF_KEYUP, 0); // Release the Tab key
+    keybd_event(Key, 0, 0, 0);
+    Delay(17);
+    keybd_event(Key, 0, KEYEVENTF_KEYUP, 0);
 }
 void PressKeyM(DWORD Key) {
-    keybd_event(Key, 0, 0, 0); // Press the Tab key
-    Delay(100); // Add a small delay (adjust if needed) to simulate typing
-    keybd_event(Key, 0, KEYEVENTF_KEYUP, 0); // Release the Tab key
+    keybd_event(Key, 0, 0, 0);
+    Delay(100);
+    keybd_event(Key, 0, KEYEVENTF_KEYUP, 0);
 }
 void GoClick(int dx, int dy) {
     INPUT input1 = { 0 };
@@ -36,9 +36,8 @@ void GoClick(int dx, int dy) {
     SendInput(1, &input1, sizeof(input1));
     ZeroMemory(&input1, sizeof(input1));
 
-    // Add a small delay here if needed
     Delay(10);
-    // Sending the mouse left button release event
+
     input1.mi.dwFlags = MOUSEEVENTF_LEFTUP;
     SendInput(1, &input1, sizeof(INPUT));
 }
@@ -67,7 +66,7 @@ void LeftUp() {
     Delay(10);
 }
 void GoSalvage(int dx, int dy) {
-    Delay(100); // Add a small delay (adjust if needed) to simulate typing
+    Delay(100);
     GoClick(dx, dy);
     Delay(700);
     GoClick(dx + 100, dy + 35);
@@ -85,35 +84,27 @@ void PressF3Key() {
 
     SendInput(1, &input1, sizeof(INPUT));
 
-    // Adding a small delay (optional) to let the key press take effect.
     Sleep(50);
 
-    // Sending the key release event
-    input1.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
+    input1.ki.dwFlags = KEYEVENTF_KEYUP;
     SendInput(1, &input1, sizeof(INPUT));
     ZeroMemory(&input1, sizeof(input1));
 }
 void CaptureScreen(const std::string& filePath, int x) {
-    // Get the screen dimensions
+
     int screenWidth = GetSystemMetrics(SM_CXSCREEN);
     int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-    // Create a device context for the screen
     HDC hScreenDC = GetDC(NULL);
 
-    // Create a compatible DC for capturing the screen
     HDC hCaptureDC = CreateCompatibleDC(hScreenDC);
 
-    // Create a bitmap compatible with the screen DC
     HBITMAP hBitmap = CreateCompatibleBitmap(hScreenDC, screenWidth, screenHeight);
 
-    // Select the bitmap into the compatible DC
     HGDIOBJ hOldBitmap = SelectObject(hCaptureDC, hBitmap);
 
-    // Copy the screen contents into the compatible DC
     BitBlt(hCaptureDC, 0, 0, screenWidth, screenHeight, hScreenDC, 0, 0, SRCCOPY);
 
-    // Save the captured image to a BMP file
     BITMAPINFO bmpInfo = { 0 };
     bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmpInfo.bmiHeader.biWidth = screenWidth;
@@ -132,17 +123,14 @@ void CaptureScreen(const std::string& filePath, int x) {
         return;
     }
 
-    // Write the BMP file header
     BITMAPFILEHEADER bmpFileHeader = { 0 };
     bmpFileHeader.bfType = 0x4D42; // 'BM'
     bmpFileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + screenWidth * screenHeight * 4;
     bmpFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
     file.write(reinterpret_cast<const char*>(&bmpFileHeader), sizeof(BITMAPFILEHEADER));
 
-    // Write the BMP info header
     file.write(reinterpret_cast<const char*>(&bmpInfo.bmiHeader), sizeof(BITMAPINFOHEADER));
 
-    // Write the BMP data
     int bufferSize = screenWidth * screenHeight * 4;
     char* buffer = new char[bufferSize];
     GetDIBits(hCaptureDC, hBitmap, 0, screenHeight, buffer, &bmpInfo, DIB_RGB_COLORS);
@@ -203,7 +191,7 @@ bool checkWinTwo(std::string Address, std::string rAddress, float Value) {
     return false;
 }
 POINT CheckBaitLoc(std::string Address) {
-    cv::Point2i maxLoc; // Use Point2d for double values
+    cv::Point2i maxLoc;
     CaptureScreen("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\Im1.bmp", 6);
     cv::Mat Im1 = cv::imread("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\Im1.bmp", cv::IMREAD_GRAYSCALE);
     cv::Mat Im2 = cv::imread(Address, cv::IMREAD_GRAYSCALE);
@@ -211,12 +199,12 @@ POINT CheckBaitLoc(std::string Address) {
 
     cv::matchTemplate(Im1, Im2, Im3, cv::TM_CCOEFF_NORMED);
 
-    // Find the minimum and maximum values in the Im3 matrix
+
     cv::minMaxLoc(Im3, NULL, NULL, NULL, &maxLoc);
 
     POINT pos;
-    pos.x = static_cast<LONG>(maxLoc.x); // Convert to integer
-    pos.y = static_cast<LONG>(maxLoc.y); // Convert to integer
+    pos.x = static_cast<LONG>(maxLoc.x);
+    pos.y = static_cast<LONG>(maxLoc.y);
 
     return pos;
 }

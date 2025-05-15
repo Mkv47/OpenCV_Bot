@@ -79,8 +79,8 @@ void GoSalvage(int dx, int dy) {
 void PressF3Key() {
     INPUT input1 = { 0 };
     input1.type = INPUT_KEYBOARD;
-    input1.ki.wVk = VK_F3; // VK_F3 represents the F3 key
-    input1.ki.dwFlags = 0; // 0 for key press event
+    input1.ki.wVk = VK_F3; / VK_F3 represents the F3 key
+    input1.ki.dwFlags = 0; / 0 for key press event
 
     SendInput(1, &input1, sizeof(INPUT));
 
@@ -124,7 +124,7 @@ void CaptureScreen(const std::string& filePath, int x) {
     }
 
     BITMAPFILEHEADER bmpFileHeader = { 0 };
-    bmpFileHeader.bfType = 0x4D42; // 'BM'
+    bmpFileHeader.bfType = 0x4D42; / 'BM'
     bmpFileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + screenWidth * screenHeight * 4;
     bmpFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
     file.write(reinterpret_cast<const char*>(&bmpFileHeader), sizeof(BITMAPFILEHEADER));
@@ -137,7 +137,7 @@ void CaptureScreen(const std::string& filePath, int x) {
     file.write(buffer, bufferSize);
     delete[] buffer;
 
-    // Cleanup
+    / Cleanup
     file.close();
     SelectObject(hCaptureDC, hOldBitmap);
     DeleteObject(hBitmap);
@@ -147,14 +147,14 @@ void CaptureScreen(const std::string& filePath, int x) {
 bool checkWin(std::string Address) {
     double Min = 0;
     Delay(10);
-    CaptureScreen("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\Im1.bmp", 1);
-    cv::Mat Im1 = cv::imread("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\Im1.bmp", cv::IMREAD_GRAYSCALE);
+    CaptureScreen("../Images/Im1.bmp", 1);
+    cv::Mat Im1 = cv::imread("../Images/Im1.bmp", cv::IMREAD_GRAYSCALE);
     cv::Mat Im2 = cv::imread(Address, cv::IMREAD_GRAYSCALE);
     cv::Mat Im3;
 
     cv::matchTemplate(Im1, Im2, Im3, cv::TM_CCOEFF_NORMED);
     cv::minMaxLoc(Im3, NULL, &Min, NULL, NULL);
-    std::cout << "Checking for Fishs | " << Min << " |                 " << "\r";
+    std::cout << "Checking for Fishs | " << Min << " |                 " << "/r";
     if (Min >= 0.85)
     {
         LeftDown();
@@ -169,8 +169,8 @@ bool checkWinTwo(std::string Address, std::string rAddress, float Value) {
     double Min1 = 0;
     double Min2 = 0;
     double MinT = 0;
-    CaptureScreen("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\Im1.bmp", 2);
-    cv::Mat Im1 = cv::imread("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\Im1.bmp", cv::IMREAD_GRAYSCALE);
+    CaptureScreen("../Images/Im1.bmp", 2);
+    cv::Mat Im1 = cv::imread("../Images/Im1.bmp", cv::IMREAD_GRAYSCALE);
     cv::Mat Im2 = cv::imread(Address, cv::IMREAD_GRAYSCALE);
     cv::Mat Im3 = cv::imread(rAddress, cv::IMREAD_GRAYSCALE);
     cv::Mat Im4;
@@ -181,7 +181,7 @@ bool checkWinTwo(std::string Address, std::string rAddress, float Value) {
     cv::matchTemplate(Im1, Im3, Im5, cv::TM_CCOEFF_NORMED);
     cv::minMaxLoc(Im5, NULL, &Min2, NULL, NULL);
     MinT = Min1 + Min2 / 2;
-    std::cout << "Checking for Other" << MinT << "\r";
+    std::cout << "Checking for Other" << MinT << "/r";
     if (MinT >= Value)
     {
         Delay(10);
@@ -192,8 +192,8 @@ bool checkWinTwo(std::string Address, std::string rAddress, float Value) {
 }
 POINT CheckBaitLoc(std::string Address) {
     cv::Point2i maxLoc;
-    CaptureScreen("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\Im1.bmp", 6);
-    cv::Mat Im1 = cv::imread("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\Im1.bmp", cv::IMREAD_GRAYSCALE);
+    CaptureScreen("../Images/Im1.bmp", 6);
+    cv::Mat Im1 = cv::imread("../Images/Im1.bmp", cv::IMREAD_GRAYSCALE);
     cv::Mat Im2 = cv::imread(Address, cv::IMREAD_GRAYSCALE);
     cv::Mat Im3;
 
@@ -227,30 +227,30 @@ void ChangeBait(std::string CBait, std::string TBait) {
 }
 void Repair() {
     POINT pos;
-    //Open Inv
-    if (checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Day.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Night.png", 0.85) == false)
+    /Open Inv
+    if (checkWinTwo("../Images/1080_Check_Day.png", "../Images/1080_Check_Night.png", 0.85) == false)
     {
         PressF3Key();
         Delay(1000);
     }
-    ChangeBait("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_EBait_Out.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_LBait.png");
+    ChangeBait("../Images/1080_EBait_Out.png", "../Images/1080_LBait.png");
     PressKey(VK_TAB);
     Delay(1000);
-    //Click
+    /Click
     GoClick(680, 1000);
     Delay(1000);
     GoClick(1050, 650);
-    //Repair Counter
+    /Repair Counter
     Delay(200);
     /*
-    if (checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Salvage_T.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Salvage_S.png", 0.98) == true)
+    if (checkWinTwo("../Images/1080_Salvage_T.png", "../Images/1080_Salvage_S.png", 0.98) == true)
     {
         Delay(100);
-        pos = CheckBaitLoc("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Salvage_T.png");
+        pos = CheckBaitLoc("../Images/1080_Salvage_T.png");
         GoSalvage((pos.x + 20), (pos.y + 20));
     }
     */
-    //Exit Inv
+    /Exit Inv
     PressKey(VK_TAB);
     Delay(1000);
     PressF3Key();
@@ -290,8 +290,8 @@ int main() {
                 Delay(10);
                 while (MinOutter == false)
                 {
-                    MinOutter = checkWin("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Fish.png");
-                    if (checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Day.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Night.png", 0.85) == true)
+                    MinOutter = checkWin("../Images/1080_Fish.png");
+                    if (checkWinTwo("../Images/1080_Check_Day.png", "../Images/1080_Check_Night.png", 0.85) == true)
                     {
                         break;
                     }
@@ -300,7 +300,7 @@ int main() {
                 if (MinOutter == true) {
                     while (true) {
                         bool MinInner = 0;
-                        MinInner = checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Day.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Night.png", 0.85);
+                        MinInner = checkWinTwo("../Images/1080_Check_Day.png", "../Images/1080_Check_Night.png", 0.85);
                         if (MinInner == true)
                         {
                             break;
@@ -309,7 +309,7 @@ int main() {
                         while (true)
                         {
                             Delay(22);
-                            if (checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Ltr.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Ltr.png", 0.70) == true || checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Day.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Night.png", 0.85) == true)
+                            if (checkWinTwo("../Images/1080_Check_Ltr.png", "../Images/1080_Check_Ltr.png", 0.70) == true || checkWinTwo("../Images/1080_Check_Day.png", "../Images/1080_Check_Night.png", 0.85) == true)
                             {
                                 break;
                             }
@@ -319,11 +319,11 @@ int main() {
                         Delay(100);
                         while (true)
                         {
-                            if (checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Str.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_rStr.png", 0.85) == true || checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Day.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Night.png", 0.85) == true)
+                            if (checkWinTwo("../Images/1080_Check_Str.png", "../Images/1080_Check_rStr.png", 0.85) == true || checkWinTwo("../Images/1080_Check_Day.png", "../Images/1080_Check_Night.png", 0.85) == true)
                             {
                                 break;
                             }
-                            else if (checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Success_Day.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Success_Night.png", 0.85) == false && checkWinTwo("D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Day.png", "D:\\Docs\\Fishing Bot\\Fishing Bot\\Images\\1080_Check_Night.png", 0.85) == false)
+                            else if (checkWinTwo("../Images/1080_Success_Day.png", "../Images/1080_Success_Night.png", 0.85) == false && checkWinTwo("../Images/1080_Check_Day.png", "../Images/1080_Check_Night.png", 0.85) == false)
                             {
                                 LeftUp();
                                 Delay(50);
@@ -343,7 +343,7 @@ int main() {
                 auto endTime = std::chrono::steady_clock::now();
                 auto duration = std::chrono::duration_cast<std::chrono::seconds>(endTime - startTime);
                 timer += static_cast<int>(duration.count());
-                //std::cout << "\r" << "Repair Counter : " << repair << "| Time Spent Fishing : " << timer /60 << " |";
+                /std::cout << "/r" << "Repair Counter : " << repair << "| Time Spent Fishing : " << timer /60 << " |";
             }
         }
     }
